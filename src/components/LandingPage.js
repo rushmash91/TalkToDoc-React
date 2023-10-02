@@ -14,6 +14,8 @@ import PdfViewer from "./PdfViewer";
 import PdfUpload from "./PdfUpload";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import * as pdfjs from "pdfjs-dist";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 const useStyles = makeStyles((theme) => ({
   landingPage: {
@@ -67,7 +69,7 @@ function LandingPage() {
   const [apiResponse, setApiResponse] = useState("");
   const [userPrompt, setUserPrompt] = useState("");
   const [pdfText, setPdfText] = useState("");
-  const [isKeyEntered,] = useState(false);
+  const [isKeyEntered] = useState(false);
   const [apiKey, setApiKey] = useState("");
 
   const handleFileUpload = async (file) => {
@@ -121,6 +123,45 @@ function LandingPage() {
     } else {
       console.error("Unexpected API response:", response);
     }
+  };
+
+  const generatePDF = async () => {
+    const element = document.getElementById("pdfContent");
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    // A4 dimensions in mm
+    const pageHeightMM = 297;
+    const pageWidthMM = 210;
+
+    // Convert A4 dimensions from mm to pixels
+    const pageHeightPx = (pageHeightMM * 96) / 25.4;
+    const pageWidthPx = (pageWidthMM * 96) / 25.4;
+
+    // Initialize PDF offsets
+    let pdfPageHeight = 0;
+
+    // Capture and add pages
+    for (
+      let yOffset = 0;
+      yOffset < element.scrollHeight;
+      yOffset += pageHeightPx
+    ) {
+      const canvas = await html2canvas(element, {
+        y: yOffset,
+        height: pageHeightPx,
+        windowWidth: element.scrollWidth,
+        windowHeight: element.scrollHeight,
+      });
+      const imgData = canvas.toDataURL("image/png");
+
+      pdf.addImage(imgData, "PNG", 0, pdfPageHeight, pageWidthMM, pageHeightMM);
+
+      if (yOffset + pageHeightPx < element.scrollHeight) {
+        pdf.addPage();
+      }
+    }
+
+    pdf.save("document.pdf");
   };
 
   return (
@@ -187,8 +228,16 @@ function LandingPage() {
                   >
                     Answer
                   </Button>
-
-                  <Paper className={classes.responsePaper}>
+                  <Button
+                    onClick={generatePDF}
+                    variant="contained"
+                    color="secondary"
+                    style={{ marginTop: "10px", marginLeft: "10px" }}
+                    disabled={!apiResponse} // Disable button if apiResponse is empty
+                  >
+                    Download as PDF
+                  </Button>
+                  <Paper id="pdfContent" className={classes.responsePaper}>
                     <Typography
                       variant="body1"
                       color="textSecondary"
