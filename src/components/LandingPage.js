@@ -135,7 +135,6 @@ function LandingPage() {
 
     // Convert A4 dimensions from mm to pixels
     const pageHeightPx = (pageHeightMM * 96) / 25.4;
-    const pageWidthPx = (pageWidthMM * 96) / 25.4;
 
     // Initialize PDF offsets
     let pdfPageHeight = 0;
