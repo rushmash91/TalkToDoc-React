@@ -1,70 +1,66 @@
-# Getting Started with Create React App
+# Talk to Doc
+#### Try out the live demo of the app: [Talk to Doc Live Demo](http://talktodoc.s3-website-us-east-1.amazonaws.com/)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+Talk to Doc is a React-based web application that allows users to upload PDF documents, ask questions about the content of the document, and receive automated responses generated using OpenAI's GPT-3.5 Turbo model. Users can also input their OpenAI API key to interact with the app.
 
-In the project directory, you can run:
+![Talk to Doc Screenshot](./ssm.png)
+![Talk to Doc Screenshot](./ss.png)
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- PDF Upload and Viewer
+- Natural Language Query Input
+- Automated Response Generation using GPT-3.5 Turbo
+- OpenAI API Key Input for personalized usage
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+Follow these steps to get the project up and running on your local machine for development and testing purposes. See the [Deployment](#deployment) section for a guide on how to deploy the project on a live system.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+### Prerequisites
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Node.js installed on your machine
+- OpenAI API key (for GPT-3.5 Turbo)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Installation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Clone the repository
+   ```bash
+   git clone https://github.com/your-username/talk-to-doc.git
+   cd talk-to-doc
+   ```
+2. Install dependencies
+   ```bash
+   npm install
+   ```
+3. Create a `.env` file in the root directory and add your OpenAI API key
+   ```plaintext
+   REACT_APP_OPENAI_API_KEY=your-api-key-here
+   ```
+4. Start the development server
+   ```bash
+   npm start
+   ```
 
-### `npm run eject`
+Now, open [http://localhost:3000](http://localhost:3000) in your browser to use the app.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Usage Tips
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Upload a PDF document by clicking on the "Upload PDF" button.
+- Once the document is uploaded, you'll see a PDF viewer on the left and a query input box on the right.
+- Enter your question related to the document content in the input box.
+- Click the "Answer" button to get a response.
+- If it's your first time using the app, you'll need to enter your OpenAI API key in the "Enter Key" input field.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Contributing
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Feel free to fork the repository, create a feature branch, and send us a pull request. For bugs, questions, and discussions please use the [Github Issues](https://github.com/your-username/talk-to-doc/issues).
 
-## Learn More
+## License
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
