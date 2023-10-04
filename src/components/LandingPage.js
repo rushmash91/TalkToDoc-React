@@ -9,6 +9,7 @@ import {
   Typography,
   Paper,
   TextField,
+  CircularProgress,
 } from "@material-ui/core";
 import PdfViewer from "./PdfViewer";
 import PdfUpload from "./PdfUpload";
@@ -63,20 +64,40 @@ async function extractText(pdfUrl) {
   return textContent;
 }
 
+async function processMessageToChatGPT(text, apiKey) {
+  const apiRequestBody = {
+    model: "gpt-3.5-turbo",
+    messages: [
+      { role: "system", content: "I'm a Student using ChatGPT for learning" },
+      { role: "user", content: text },
+    ],
+  };
+
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + apiKey,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(apiRequestBody),
+  });
+
+  return response.json();
+}
+
 function LandingPage() {
   const classes = useStyles();
   const [pdfFile, setPdfFile] = useState(null);
   const [apiResponse, setApiResponse] = useState("");
   const [userPrompt, setUserPrompt] = useState("");
   const [pdfText, setPdfText] = useState("");
-  const [isKeyEntered] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [apiKey, setApiKey] = useState("");
 
   const handleFileUpload = async (file) => {
     if (file && file.type === "application/pdf") {
       const url = URL.createObjectURL(file);
       setPdfFile(url);
-
       const text = await extractText(url);
       setPdfText(text);
     } else {
@@ -84,44 +105,31 @@ function LandingPage() {
     }
   };
 
-  async function processMessageToChatGPT(text) {
-    const apiRequestBody = {
-      model: "gpt-3.5-turbo",
-      messages: [
-        { role: "system", content: "I'm a Student using ChatGPT for learning" },
-        { role: "user", content: text },
-      ],
-    };
-
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + apiKey,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(apiRequestBody),
-    });
-
-    return response.json();
-  }
-
   const handleSendRequest = async () => {
-    const textToSend =
-      "Answer the Question given below but only using the information that is available within the context text provided. Also Note the reponse you give should be in the form of html so that it can directly be displayed on a webpage. Make sure to use heading bold, itlics, underline, paragraphs.... and many of the other elements to make the reponse very presentable and pleasing for a web page." +
-      "Question: " +
-      userPrompt +
-      " " +
-      "Context Text: " +
-      pdfText;
-    const response = await processMessageToChatGPT(textToSend);
+    setIsLoading(true);
+    try {
+      const textToSend =
+        "Answer the Question given below but only using the information that is available within the context text provided. Also Note the reponse you give should be in the form of html so that it can directly be displayed on a webpage. Make sure to use heading bold, itlics, underline, paragraphs.... and many of the other elements to make the reponse very presentable and pleasing for a web page." +
+        "Question: " +
+        userPrompt +
+        " " +
+        "Context Text: " +
+        pdfText;
 
-    if (response && response.choices && response.choices.length > 0) {
-      const content = response.choices[0]?.message?.content;
-      if (content) {
-        setApiResponse(content);
+      const response = await processMessageToChatGPT(textToSend, apiKey);
+
+      if (response && response.choices && response.choices.length > 0) {
+        const content = response.choices[0]?.message?.content;
+        if (content) {
+          setApiResponse(content);
+        }
+      } else {
+        console.error("Unexpected API response:", response);
       }
-    } else {
-      console.error("Unexpected API response:", response);
+    } catch (error) {
+      console.error("Something went wrong:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -169,7 +177,7 @@ function LandingPage() {
         <Grid item xs={12}>
           <h1>Talk to Doc</h1>
         </Grid>
-        {!isKeyEntered && (
+        {!apiKey && (
           <Grid item xs={12}>
             <TextField
               type="password" // hide the API key input
@@ -223,10 +231,15 @@ function LandingPage() {
                     variant="contained"
                     color="primary"
                     style={{ marginTop: "10px" }}
-                    disabled={!apiKey} // disable button if apiKey is empty
+                    disabled={!apiKey}
                   >
-                    Answer
+                    {isLoading ? (
+                      <CircularProgress size={24} color="secondary" />
+                    ) : (
+                      "Answer"
+                    )}
                   </Button>
+
                   <Button
                     onClick={generatePDF}
                     variant="contained"
