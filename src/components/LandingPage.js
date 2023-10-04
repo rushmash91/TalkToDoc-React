@@ -66,7 +66,7 @@ async function extractText(pdfUrl) {
 
 async function processMessageToChatGPT(text, apiKey) {
   const apiRequestBody = {
-    model: "gpt-3.5-turbo",
+    model: "gpt-4",
     messages: [
       { role: "system", content: "I'm a Student using ChatGPT for learning" },
       { role: "user", content: text },
